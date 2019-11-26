@@ -64,7 +64,6 @@ public class UserServiceimpl implements UserService, InitializingBean {
     @Override
     public void del(String num,Integer nums) {
          userMapper.del(num, nums);
-
     }
 
     @Override
