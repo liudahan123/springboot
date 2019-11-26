@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射 接口 IBookDao -->
+<mapper namespace="com.wanxi.mapper.UserMapper">
+    <!-- 这里的id 是 接口中的方法名  -->
+    <select id="all" resultType="com.wanxi.entity.User">
+        select userId,userName,userPw from t_admin
+        <!--where 1=1
+        <if test="username != null">
+            and userName=#{username}
+        </if>
+        <if test="num!=null and num!=''">
+            and userId=#{num}
+        </if>-->
+        <if test="(num!=null and num!='') or (username != null and username!='')">
+            <where>
+                <choose>
+                    <when test="username != null">
+                        and userName=#{username}
+                    </when>
+                    <when test="num!=null and num!=''">
+                        and userId=#{num}
+                    </when>
+                    <otherwise>
+                        limit 0,5
+                    </otherwise>
+                </choose>
+            </where>
+        </if>
+        <!--<trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="username != null">
+                and userName=#{username}
+            </if>
+            <if test="num!=null and num!=''">
+                and userId=#{num}  <![CDATA[<=]]>#{page}*#{rows}
+            </if>
+        </trim>-->
+
+    </select>
+
+    <delete id="add" parameterType="int">
+          #{num}
+    </delete>
+    <insert id="trigger">
+        create trigger t2
+after
+DELETE
+on chard
+for each row
+begin
+DELETE FROM
+students where sid=OLD.sid;
+end
+    </insert>
+    <delete id="deluser" parameterType="int">
+            DELETE FROM chard where cid=#{uid}
+    </delete>
+    <delete id="deltigger">
+        drop trigger t2
+    </delete>
+    <select id="ccg" resultType="com.wanxi.entity.User">
+        call demo(#{nums});
+    </select>
+    <insert id="chuanjian">
+create PROCEDURE demos(IN num VARCHAR(255),IN nums INT)
+BEGIN
+IF num='first' THEN
+DELETE FROM first where fid=nums;
+END IF;
+IF num='demo' THEN
+DELETE FROM demo where dif=nums;
+END IF;
+IF num='students' THEN
+SELECT sid,sname,spwd from students  where sid=nums;
+END IF;
+END
+    </insert>
+    <delete id="del">
+        CALL demos(#{num},#{nums})
+    </delete>
+    <select id="stua" resultType="com.wanxi.entity.Students">
+        call stu(1)
+    </select>
+    <select id="allmaes" resultType="com.wanxi.entity.Maes">
+        select * from maes
+    </select>
+</mapper>
